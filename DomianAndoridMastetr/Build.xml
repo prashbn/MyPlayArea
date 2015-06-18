@@ -1,1 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="main" name="DomainAndroidMastetr">
+    
+
+     <property name="lib.dir" value="${basedir}/lib"/>
+     <property name="src.dir" value="${basedir}/Driver"/>
+     <property name="classes.dir" value="${basedir}/classes"/>
+     <property name="jar.dir"     value="${basedir}/jar"/>
+     <property name="main-class"  value="Driver.Executor"/>
+     
+        <path id="classpath_ref">
+        <pathelement path="${basedir}/"/>
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+             </path>
+
+    <target name="clean">
+        <delete dir="${classes.dir}" /> 
+        <delete dir="${jar.dir}" /> 
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+         <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath_ref" includeantruntime="false">
+            </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="run" depends="jar">
+
+                <java classname="${main-class}" fork="true" >
+                     <arg line="username"/>
+                     <arg line="password"/>
+                  <classpath>
+                    <path refid="classpath_ref"/>
+                    <pathelement location="${jar.dir}/${ant.project.name}.jar"/>
+                  </classpath>
+                 </java>
+            </target>
+    <target name="main" depends="clean,run"/>
+
+</project>
